@@ -1,0 +1,20 @@
+name: kspace_motion_test
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy<2
+  - scipy
+  - pytest
+  - finufft
+  - pip:
+      - torch==2.2.2
+      - torchio==0.18.92
+      - nibabel
+      - SimpleITK
+      - itk-elastix
+      - pytorch-finufft
+      - torchreg
+      - flask

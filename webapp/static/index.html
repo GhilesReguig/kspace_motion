@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulation de mouvement IRM</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Simulation de mouvement IRM dans le k-space</h1>
+    <p>Choisissez les artefacts à simuler, vérifiez la trajectoire de mouvement, puis appliquez le tout à la T1w de Colin27.</p>
+  </header>
+
+  <main class="layout">
+    <details class="params" id="params" open>
+      <summary><h2>Paramètres</h2></summary>
+      <div class="params-body">
+        <div class="params-tools">
+          <div class="mode" role="group" aria-label="Niveau de détail des réglages">
+            <button type="button" data-mode="simple" aria-pressed="true">Simple</button>
+            <button type="button" data-mode="advanced" aria-pressed="false">Avancé</button>
+          </div>
+          <button type="button" id="reseed" class="ghost" title="Tirer une nouvelle graine aléatoire">Nouvelle graine</button>
+        </div>
+        <p class="help mode-help" id="mode-help"></p>
+        <form id="form" autocomplete="off" onsubmit="return false"></form>
+      </div>
+    </details>
+
+    <div class="steps">
+      <section class="card" id="step1" aria-labelledby="step1-title">
+        <header class="card-head">
+          <h2 id="step1-title"><span class="step-no">1</span>Trajectoire de mouvement</h2>
+          <div class="chips" id="traj-stats" aria-live="polite"></div>
+        </header>
+        <p class="status" id="traj-status" role="status"></p>
+        <div class="charts">
+          <figure>
+            <figcaption>Translations <span class="unit">(mm)</span>
+              <span class="legend" data-legend></span></figcaption>
+            <canvas class="chart" id="chart-trans" aria-label="Courbes des translations en fonction du temps d'acquisition" role="img"></canvas>
+          </figure>
+          <figure>
+            <figcaption>Rotations <span class="unit">(°)</span>
+              <span class="legend" data-legend></span></figcaption>
+            <canvas class="chart" id="chart-rot" aria-label="Courbes des rotations en fonction du temps d'acquisition" role="img"></canvas>
+          </figure>
+        </div>
+        <p class="hint">Axe horizontal : avancement de l'acquisition le long de l'axe de phase. Le trait pointillé marque le centre du k-space,
+          qui détermine l'essentiel du contraste.</p>
+      </section>
+
+      <section class="card" id="step2" aria-labelledby="step2-title">
+        <header class="card-head">
+          <h2 id="step2-title"><span class="step-no">2</span>Simulation sur Colin27 (T1w)</h2>
+          <div class="chips" id="sim-count" aria-live="polite"></div>
+        </header>
+        <div class="run-row">
+          <button type="button" id="run" class="primary" disabled>Lancer la simulation de mouvement</button>
+          <span class="status" id="sim-status" role="status"></span>
+        </div>
+        <p class="hint">Enregistrez jusqu'à trois simulations (A, B, C) en changeant les paramètres entre chaque lancement, puis comparez-les ci-dessous.</p>
+        <div class="slots" id="slots" role="radiogroup" aria-label="Emplacement de la prochaine simulation"></div>
+
+        <div id="results" hidden>
+          <div class="gain-row">
+            <label for="gain">Amplification de la différence</label>
+            <input type="range" id="gain" min="1" max="12" step="1" value="4">
+            <output id="gain-out" for="gain">×4</output>
+          </div>
+          <div class="gain-row" id="display-row" hidden>
+            <span>Image affichée</span>
+            <label class="choice"><input type="radio" name="display" value="coreg" checked> Après corégistration</label>
+            <label class="choice"><input type="radio" name="display" value="raw"> Avec mouvement (brute)</label>
+          </div>
+          <div id="views"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">Donnée : modèle Colin27 (MNI, version 1998), T1w à 1 mm, fournie par TorchIO. Calcul : NUFFT 3D (finufft).</footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>
